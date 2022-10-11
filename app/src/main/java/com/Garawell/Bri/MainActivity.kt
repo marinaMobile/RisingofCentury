@@ -35,20 +35,20 @@ class MainActivity : AppCompatActivity() {
         bindMain = ActivityMainBinding.inflate(layoutInflater)
         setContentView(bindMain.root)
         jsoup = ""
+
         deePP(this)
+
         val prefs = getSharedPreferences("ActivityPREF", MODE_PRIVATE)
         if (prefs.getBoolean("activity_exec", false)) {
-            GlobalScope.launch {
-                mover()
-            }
+            toTestGrounds()
             finish()
         } else {
             val exec = prefs.edit()
             exec.putBoolean("activity_exec", true)
             exec.apply()
+
             val job = GlobalScope.launch(Dispatchers.IO) {
                 checker = getCheckCode(linkAppsCheckPart1+linkAppsCheckPart2)
-
             }
             runBlocking {
                 try {
@@ -64,9 +64,7 @@ class MainActivity : AppCompatActivity() {
                 afNullRecordedOrNotChecker(1500)
 
             } else {
-                GlobalScope.launch(Dispatchers.IO) {
-                    mover()
-                }
+                    toTestGrounds()
             }
         }
     }
@@ -102,7 +100,7 @@ class MainActivity : AppCompatActivity() {
                 val hawk1: String? = sharPref.getString(C1, null)
                 if (hawk1 != null) {
                     Log.d("TestInUIHawk", hawk1.toString())
-                    mover()
+                    toTestGrounds()
                     break
                 } else {
                     val hawk1: String? = sharPref.getString(C1, null)
@@ -137,7 +135,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
+    private fun toTestGrounds() {
+        Intent(this, FilterMeNow::class.java)
+            .also { startActivity(it) }
+        finish()
+    }
     fun deePP(context: Context) {
         val sharPref = applicationContext.getSharedPreferences("SP", MODE_PRIVATE)
         val editor = sharPref.edit()
@@ -146,7 +148,6 @@ class MainActivity : AppCompatActivity() {
         ) { appLinkData: AppLinkData? ->
             appLinkData?.let {
                 val params = appLinkData.targetUri.host
-
                 editor.putString(D1, params.toString())
                 editor.apply()
             }
@@ -157,59 +158,7 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    private fun getCodeFromUrl(link: String) {
-        val url = URL(link)
-        val urlConnection = url.openConnection() as HttpURLConnection
-
-        try {
-            val text = urlConnection.inputStream.bufferedReader().readText()
-            if (text.isNotEmpty()) {
-                jsoup = text
-            }
-        } catch (ex: Exception) {
-
-        } finally {
-            urlConnection.disconnect()
-        }
-    }
-    private suspend fun coroutineTask(): String {
-        val sharedPref = getSharedPreferences("SP", MODE_PRIVATE)
-
-        val nameParameter: String? = sharedPref.getString(C1, null)
-        val appLinkParameter: String? = sharedPref.getString(D1, null)
 
 
-        val taskName = "$linkFilterPart1$linkFilterPart2$odone$nameParameter"
-        val taskLink = "$linkFilterPart1$linkFilterPart2$odone$appLinkParameter"
-
-        withContext(Dispatchers.IO) {
-            //changed logical null to string null
-            if (nameParameter != "null") {
-                getCodeFromUrl(taskName)
-                Log.d("Check1C", taskName)
-            } else {
-                getCodeFromUrl(taskLink)
-                Log.d("Check1C", taskLink)
-            }
-        }
-        return jsoup
-    }
-
-    private suspend fun mover(){
-        val job = GlobalScope.launch(Dispatchers.IO) {
-            jsoup = coroutineTask()
-            Log.d("jsoup status from global scope", jsoup)
-        }
-
-        job.join()
-        Log.d("jsoup status out of global scope", jsoup)
-
-        if (jsoup == jsoupCheck) {
-            Intent(applicationContext, Gamm::class.java).also { startActivity(it) }
-        } else {
-            Intent(applicationContext, Weeeeeb::class.java).also { startActivity(it) }
-        }
-        finish()
-    }
 
 }
