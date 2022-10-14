@@ -7,13 +7,10 @@ import android.os.Bundle
 import android.util.Log
 import com.Garawell.Bri.ApppppCL.Companion.AF_DEV_KEY
 import com.Garawell.Bri.ApppppCL.Companion.C1
+import com.Garawell.Bri.ApppppCL.Companion.CH
 import com.Garawell.Bri.ApppppCL.Companion.D1
-import com.Garawell.Bri.ApppppCL.Companion.jsoupCheck
 import com.Garawell.Bri.ApppppCL.Companion.linkAppsCheckPart1
 import com.Garawell.Bri.ApppppCL.Companion.linkAppsCheckPart2
-import com.Garawell.Bri.ApppppCL.Companion.linkFilterPart1
-import com.Garawell.Bri.ApppppCL.Companion.linkFilterPart2
-import com.Garawell.Bri.ApppppCL.Companion.odone
 import com.Garawell.Bri.databinding.ActivityMainBinding
 import com.Garawell.Bri.gamm.Gamm
 import com.appsflyer.AppsFlyerConversionListener
@@ -27,7 +24,7 @@ import java.net.URL
 class MainActivity : AppCompatActivity() {
     private lateinit var bindMain: ActivityMainBinding
 
-    var checker: Boolean = false
+    var checker: String = "null"
     lateinit var jsoup: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,8 +37,19 @@ class MainActivity : AppCompatActivity() {
 
         val prefs = getSharedPreferences("ActivityPREF", MODE_PRIVATE)
         if (prefs.getBoolean("activity_exec", false)) {
-            toTestGrounds()
-            finish()
+//            toTestGrounds()
+//            finish()
+            val sharPref = getSharedPreferences("SP", MODE_PRIVATE)
+            when (sharPref.getString(CH, "null")) {
+                "2" -> {
+                    skipMe()
+                    Log.d("devTest", "Got Skipped Twice")
+                }
+                else -> {
+                    toTestGrounds()
+                    Log.d("devTest", "movedToTest")
+                }
+            }
         } else {
             val exec = prefs.edit()
             exec.putBoolean("activity_exec", true)
@@ -57,34 +65,53 @@ class MainActivity : AppCompatActivity() {
                 }
             }
 
-            if (checker){
-                AppsFlyerLib.getInstance()
-                    .init(AF_DEV_KEY, conversionDataListener, applicationContext)
-                AppsFlyerLib.getInstance().start(this)
-                afNullRecordedOrNotChecker(1500)
-
-            } else {
+            when (checker) {
+                "1" -> {
+                    AppsFlyerLib.getInstance()
+                        .init(AF_DEV_KEY, conversionDataListener, applicationContext)
+                    AppsFlyerLib.getInstance().start(this)
+                    afNullRecordedOrNotChecker(1500)
+                }
+                "2" -> {
+                    skipMe()
+                    Log.d("devTest", "Got Skipped Once")
+                }
+                "0" -> {
                     toTestGrounds()
+                }
             }
         }
     }
 
 
 
-    private suspend fun getCheckCode(link: String): Boolean {
+    private suspend fun getCheckCode(link: String): String {
         val url = URL(link)
+        val oneStr = "1"
+        val twoStr = "2"
+        val activeStrn = "0"
         val urlConnection = withContext(Dispatchers.IO) {
             url.openConnection()
         } as HttpURLConnection
 
         return try {
-            val text = urlConnection.inputStream.bufferedReader().readText()
-            if (text == "1") {
-                Log.d("jsoup status", text)
-                true
-            } else {
-                Log.d("jsoup status", "is null")
-                false
+            when (val text = urlConnection.inputStream.bufferedReader().readText()) {
+                "2" -> {
+                    val sharPref = applicationContext.getSharedPreferences("SP", MODE_PRIVATE)
+                    val editor = sharPref.edit()
+                    editor.putString(CH, twoStr)
+                    editor.apply()
+                    Log.d("jsoup status", text)
+                    twoStr
+                }
+                "1" -> {
+                    Log.d("jsoup status", text)
+                    oneStr
+                }
+                else -> {
+                    Log.d("jsoup status", "is null")
+                    activeStrn
+                }
             }
         } finally {
             urlConnection.disconnect()
@@ -137,6 +164,12 @@ class MainActivity : AppCompatActivity() {
 
     private fun toTestGrounds() {
         Intent(this, FilterMeNow::class.java)
+            .also { startActivity(it) }
+        finish()
+    }
+
+    private fun skipMe() {
+        Intent(this, Gamm::class.java)
             .also { startActivity(it) }
         finish()
     }

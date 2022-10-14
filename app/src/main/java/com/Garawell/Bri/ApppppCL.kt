@@ -26,6 +26,7 @@ class ApppppCL: Application() {
         var MAIN_ID: String? = ""
         var C1: String? = "c11"
         var D1: String? = "d11"
+        var CH: String? = "check"
 
     }
 
