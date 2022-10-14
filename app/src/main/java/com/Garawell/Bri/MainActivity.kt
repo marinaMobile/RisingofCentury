@@ -43,11 +43,9 @@ class MainActivity : AppCompatActivity() {
             when (sharPref.getString(CH, "null")) {
                 "2" -> {
                     skipMe()
-                    Log.d("devTest", "Got Skipped Twice")
                 }
                 else -> {
                     toTestGrounds()
-                    Log.d("devTest", "movedToTest")
                 }
             }
         } else {
@@ -74,7 +72,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 "2" -> {
                     skipMe()
-                    Log.d("devTest", "Got Skipped Once")
+
                 }
                 "0" -> {
                     toTestGrounds()
