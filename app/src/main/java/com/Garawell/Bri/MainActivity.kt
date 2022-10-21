@@ -32,7 +32,6 @@ class MainActivity : AppCompatActivity() {
         bindMain = ActivityMainBinding.inflate(layoutInflater)
         setContentView(bindMain.root)
         jsoup = ""
-
         deePP(this)
 
         val prefs = getSharedPreferences("ActivityPREF", MODE_PRIVATE)
@@ -46,7 +45,7 @@ class MainActivity : AppCompatActivity() {
                   пресет 3 скипает всю логику, кроме дипа, и открывает вебвью,
                   этот пресет нужен на случай отключения аппслфаера
                   пресеты nm, dp, org возможны только при пресете 1 в apps.txt
-                  эти пресеты нужны для открытия
+                  эти пресеты нужны для повторного открытия
                 */
                 "2" -> {
                     skipMe()
@@ -93,14 +92,11 @@ class MainActivity : AppCompatActivity() {
                 }
                 "2" -> {
                     skipMe()
-
                 }
                 "3" -> {
                     testWV()
                 }
-//                "0" -> {
-//                   testWV()
-//                }
+
             }
         }
     }
@@ -176,7 +172,8 @@ class MainActivity : AppCompatActivity() {
                             val editor = sharPref.edit()
                             editor.putString(CH, "org")
                             editor.apply()
-                            skipMe()}
+                            skipMe()
+                        }
 
                     }
                     break
