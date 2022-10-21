@@ -43,6 +43,10 @@ class MainActivity : AppCompatActivity() {
                 "2" -> {
                     skipMe()
                 }
+                "3" -> {
+                    testWV()
+                }
+
                 else -> {
                     toTestGrounds()
                 }
@@ -111,6 +115,10 @@ class MainActivity : AppCompatActivity() {
                     oneStr
                 }
                 "3" -> {
+                    val sharPref = applicationContext.getSharedPreferences("SP", MODE_PRIVATE)
+                    val editor = sharPref.edit()
+                    editor.putString(CH, twoStr)
+                    editor.apply()
                     Log.d("jsoup status", text)
                     testStr
                 }
