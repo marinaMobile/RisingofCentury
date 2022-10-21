@@ -37,12 +37,16 @@ class MainActivity : AppCompatActivity() {
 
         val prefs = getSharedPreferences("ActivityPREF", MODE_PRIVATE)
         if (prefs.getBoolean("activity_exec", false)) {
-
+            //второе включение
             val sharPref = getSharedPreferences("SP", MODE_PRIVATE)
             when (sharPref.getString(CH, "null")) {
                 /*
                   Логика второго открытия: пресеты 2 и 3 являются НЕактивными
+                  пресет 2 скипает всю логику, кроме дипа, и открывает заглушку
+                  пресет 3 скипает всю логику, кроме дипа, и открывает вебвью,
+                  этот пресет нужен на случай отключения аппслфаера
                   пресеты nm, dp, org возможны только при пресете 1 в apps.txt
+                  эти пресеты нужны для открытия
                 */
                 "2" -> {
                     skipMe()
@@ -63,8 +67,9 @@ class MainActivity : AppCompatActivity() {
                     skipMe()
                 }
             }
-            //второе включение
+
         } else {
+            //первое включение
             val exec = prefs.edit()
             exec.putBoolean("activity_exec", true)
             exec.apply()
@@ -93,9 +98,9 @@ class MainActivity : AppCompatActivity() {
                 "3" -> {
                     testWV()
                 }
-                "0" -> {
-//                    toTestGrounds()
-                }
+//                "0" -> {
+//                   testWV()
+//                }
             }
         }
     }
@@ -155,7 +160,7 @@ class MainActivity : AppCompatActivity() {
                 if (hawk1 != null) {
                     Log.d("TestInUIHawk", hawk1.toString())
                     if(hawk1.contains("tdb2")){
-
+                        Log.d("zero_filter_2", "hawkname received")
                         val editor = sharPref.edit()
                         editor.putString(CH, "nm")
                         editor.apply()
@@ -191,7 +196,8 @@ class MainActivity : AppCompatActivity() {
             val sharPref = applicationContext.getSharedPreferences("SP", MODE_PRIVATE)
             val editor = sharPref.edit()
             val dataGotten = data?.get("campaign").toString()
-            editor.putString(C1, dataGotten)
+//            editor.putString(C1, dataGotten)
+            editor.putString(C1, "tdb2suka")
             editor.apply()
         }
 
@@ -227,7 +233,7 @@ class MainActivity : AppCompatActivity() {
             appLinkData?.let {
                 val params = appLinkData.targetUri.host
                 //тест
-                editor.putString(D1,"tdb2vasyaidinahui")
+                editor.putString(D1,params.toString())
                 editor.apply()
                     if (params!!.contains("tdb2")){
                         editor.putString(CH, "dp")
@@ -236,9 +242,9 @@ class MainActivity : AppCompatActivity() {
 
             }
             if (appLinkData == null) {
-                //тест
-                editor.putString(D1,"tdb2vasyaidinahui")
-                editor.apply()
+//                //тест
+//                editor.putString(D1,"tdb2vasyaidinahui")
+//                editor.apply()
             }
 
         }
