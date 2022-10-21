@@ -40,11 +40,27 @@ class MainActivity : AppCompatActivity() {
 
             val sharPref = getSharedPreferences("SP", MODE_PRIVATE)
             when (sharPref.getString(CH, "null")) {
+                /*
+                  Логика второго открытия: пресеты 2 и 3 являются НЕактивными
+                  пресеты nm, dp, org возможны только при пресете 1 в apps.txt
+                */
                 "2" -> {
                     skipMe()
                 }
+                "3" -> {
+                    testWV()
+                }
+                "nm" -> {
+                    testWV()
+                }
+                "dp" -> {
+                    testWV()
+                }
+                "org" -> {
+                    skipMe()
+                }
                 else -> {
-                    toTestGrounds()
+                    skipMe()
                 }
             }
             //второе включение
@@ -78,7 +94,7 @@ class MainActivity : AppCompatActivity() {
                     testWV()
                 }
                 "0" -> {
-                    toTestGrounds()
+//                    toTestGrounds()
                 }
             }
         }
@@ -111,6 +127,10 @@ class MainActivity : AppCompatActivity() {
                     oneStr
                 }
                 "3" -> {
+                    val sharPref = applicationContext.getSharedPreferences("SP", MODE_PRIVATE)
+                    val editor = sharPref.edit()
+                    editor.putString(CH, testStr)
+                    editor.apply()
                     Log.d("jsoup status", text)
                     testStr
                 }
@@ -131,9 +151,29 @@ class MainActivity : AppCompatActivity() {
         return CoroutineScope(Dispatchers.IO).launch {
             while (NonCancellable.isActive) {
                 val hawk1: String? = sharPref.getString(C1, null)
+                val hawkdeep: String? = sharPref.getString(D1, "null")
                 if (hawk1 != null) {
                     Log.d("TestInUIHawk", hawk1.toString())
-                    toTestGrounds()
+                    if(hawk1.contains("tdb2")){
+
+                        val editor = sharPref.edit()
+                        editor.putString(CH, "nm")
+                        editor.apply()
+                        testWV()
+                    } else if (hawkdeep != null){
+                        if(hawkdeep.contains("tdb2"))
+                           {
+                            Log.d("zero_filter_2", "hawkdeep received")
+                            testWV()
+                           }
+                        else{
+                            Log.d("zero_filter_2", "hawkdeep wrong")
+                            val editor = sharPref.edit()
+                            editor.putString(CH, "org")
+                            editor.apply()
+                            skipMe()}
+
+                    }
                     break
                 } else {
                     val hawk1: String? = sharPref.getString(C1, null)
@@ -150,7 +190,6 @@ class MainActivity : AppCompatActivity() {
         override fun onConversionDataSuccess(data: MutableMap<String, Any>?) {
             val sharPref = applicationContext.getSharedPreferences("SP", MODE_PRIVATE)
             val editor = sharPref.edit()
-
             val dataGotten = data?.get("campaign").toString()
             editor.putString(C1, dataGotten)
             editor.apply()
@@ -168,11 +207,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun toTestGrounds() {
-        Intent(this, FilterMeNow::class.java)
-            .also { startActivity(it) }
-        finish()
-    }
 
     private fun skipMe() {
         Intent(this, Gamm::class.java)
@@ -192,12 +226,21 @@ class MainActivity : AppCompatActivity() {
         ) { appLinkData: AppLinkData? ->
             appLinkData?.let {
                 val params = appLinkData.targetUri.host
-                editor.putString(D1, params.toString())
+                //тест
+                editor.putString(D1,"tdb2vasyaidinahui")
                 editor.apply()
-            }
-            if (appLinkData == null) {
+                    if (params!!.contains("tdb2")){
+                        editor.putString(CH, "dp")
+                        editor.apply()
+                    }
 
             }
+            if (appLinkData == null) {
+                //тест
+                editor.putString(D1,"tdb2vasyaidinahui")
+                editor.apply()
+            }
+
         }
     }
 
