@@ -21,14 +21,19 @@ class FilterMeNow : AppCompatActivity() {
         val nameTest: String? = sharPref.getString(ApppppCL.C1, "null")
         val deepTest: String? = sharPref.getString(ApppppCL.D1, "null")
         if (nameTest!!.contains("tdb2")){
+            Log.d("zero_filter", "nameWeb")
             Intent(this, Weeeeeb::class.java)
                 .also { startActivity(it) }
             finish()
-        } else if(deepTest!!.contains("tdb2")){
+        }
+       else if(deepTest!!.contains("tdb2")){
+            Log.d("zero_filter", "deepWeb")
             Intent(this, Weeeeeb::class.java)
                 .also { startActivity(it) }
             finish()
-        } else{
+        }
+        else{
+            Log.d("zero_filter", "toGame")
             Intent(this, Gamm::class.java)
                 .also { startActivity(it) }
             finish()
