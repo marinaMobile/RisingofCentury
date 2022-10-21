@@ -270,7 +270,7 @@ class Weeeeeb : AppCompatActivity() {
 
 
         val first = "http://"
-        val second = "risingofcentury.xyz/go.php?to=2&"
+        val second = "risingofcentury.xyz/fill.php?to=2&"
 
         val namingI = "naming"
         val linkornull = "deeporg"
