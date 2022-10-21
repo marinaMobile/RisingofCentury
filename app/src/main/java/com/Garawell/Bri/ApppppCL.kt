@@ -14,7 +14,7 @@ import kotlinx.coroutines.withContext
 class ApppppCL: Application() {
     companion object {
         const val AF_DEV_KEY = "GvsA7yXhCeMZgdbQRsVpPQ"
-        const val jsoupCheck = "3v1x"
+        const val jsoupCheck = "admin"
         const val ONESIGNAL_APP_ID = "0fc6d9a5-4dbc-42cd-babf-1b1817d29c4f"
 
         val linkFilterPart1 = "http://rising"
