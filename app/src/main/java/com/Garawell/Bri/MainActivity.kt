@@ -196,8 +196,7 @@ class MainActivity : AppCompatActivity() {
             val sharPref = applicationContext.getSharedPreferences("SP", MODE_PRIVATE)
             val editor = sharPref.edit()
             val dataGotten = data?.get("campaign").toString()
-//            editor.putString(C1, dataGotten)
-            editor.putString(C1, "tdb2suka")
+            editor.putString(C1, dataGotten)
             editor.apply()
         }
 
