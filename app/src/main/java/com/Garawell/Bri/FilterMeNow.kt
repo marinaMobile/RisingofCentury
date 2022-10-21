@@ -4,8 +4,11 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import com.Garawell.Bri.ApppppCL.Companion.C1
+import com.Garawell.Bri.ApppppCL.Companion.D1
 import com.Garawell.Bri.ApppppCL.Companion.jsoupCheck
 import com.Garawell.Bri.gamm.Gamm
+import com.orhanobut.hawk.Hawk
 import kotlinx.coroutines.*
 import java.lang.Exception
 import java.net.HttpURLConnection
@@ -36,17 +39,16 @@ class FilterMeNow : AppCompatActivity() {
                     Intent(applicationContext, Weeeeeb::class.java).also { startActivity(it) }
                 }
                 finish()
-            } catch (e: Exception) {
+            } catch (_: Exception) {
 
             }
         }
     }
 
     private suspend fun coTask(): String {
-        val sharedPref = getSharedPreferences("SP", MODE_PRIVATE)
 
-        val nameParameter: String? = sharedPref.getString(ApppppCL.C1, null)
-        val appLinkParameter: String? = sharedPref.getString(ApppppCL.D1, null)
+        val nameParameter: String? = Hawk.get(C1)
+        val appLinkParameter: String? = Hawk.get(D1)
 
 
         val taskName = "${ApppppCL.linkFilterPart1}${ApppppCL.linkFilterPart2}${ApppppCL.odone}$nameParameter"
@@ -73,9 +75,7 @@ class FilterMeNow : AppCompatActivity() {
             if (text.isNotEmpty()) {
                 jsoup = text
             }
-        } catch (ex: Exception) {
-
-        } finally {
+        }  finally {
             urlConnection.disconnect()
         }
     }

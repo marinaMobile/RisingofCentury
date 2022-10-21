@@ -5,6 +5,7 @@ import android.content.Context
 import android.util.Log
 import com.google.android.gms.ads.identifier.AdvertisingIdClient
 import com.onesignal.OneSignal
+import com.orhanobut.hawk.Hawk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -40,17 +41,13 @@ class ApppppCL: Application() {
         // OneSignal Initialization
         OneSignal.initWithContext(this)
         OneSignal.setAppId(ONESIGNAL_APP_ID)
+        Hawk.init(this).build()
     }
 
     private suspend fun applyDeviceId(context: Context) {
         val advertisingInfo = Adv(context)
         val idInfo = advertisingInfo.getAdvertisingId()
-
-        val prefs = getSharedPreferences("SP", MODE_PRIVATE)
-        val editor = prefs.edit()
-
-        editor.putString(MAIN_ID, idInfo)
-        editor.apply()
+        Hawk.put(MAIN_ID, idInfo)
     }
 
 }

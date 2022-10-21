@@ -17,6 +17,7 @@ import com.Garawell.Bri.databinding.ActivityWeeeeebBinding
 import com.appsflyer.AppsFlyerLib
 import com.google.android.material.snackbar.Snackbar
 import com.onesignal.OneSignal
+import com.orhanobut.hawk.Hawk
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.File
@@ -249,11 +250,10 @@ class Weeeeeb : AppCompatActivity() {
 
         val spoon = getSharedPreferences("SP_WEBVIEW_PREFS", AppCompatActivity.MODE_PRIVATE)
 
-        val sharPref = getSharedPreferences("SP", MODE_PRIVATE)
+        val cpOne:String? = Hawk.get(C1)
+        val dpOne: String? = Hawk.get(D1)
+        val mainId: String? = Hawk.get(MAIN_ID)
 
-        val cpOne: String? = sharPref.getString(C1, "null")
-        val dpOne: String? = sharPref.getString(D1, "null")
-        val mainid: String? = sharPref.getString(MAIN_ID, null)
 
         val pack = "com.Garawell.Bri"
 
@@ -282,10 +282,10 @@ class Weeeeeb : AppCompatActivity() {
         var after = ""
         if (cpOne != "null") {
             after =
-                "$resultAB$one$cpOne&$two$afId&$three$mainid&$four$pack&$five$androidVersion&$six$namingI"
+                "$resultAB$one$cpOne&$two$afId&$three$mainId&$four$pack&$five$androidVersion&$six$namingI"
         } else {
             after =
-                "$resultAB$one$dpOne&$two$afId&$three$mainid&$four$pack&$five$androidVersion&$six$linkornull"
+                "$resultAB$one$dpOne&$two$afId&$three$mainId&$four$pack&$five$androidVersion&$six$linkornull"
         }
         Log.d("TESTAG", "Test Result $after")
         pushToOneSignal(afId.toString())

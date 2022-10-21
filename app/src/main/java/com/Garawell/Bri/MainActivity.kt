@@ -16,6 +16,7 @@ import com.Garawell.Bri.gamm.Gamm
 import com.appsflyer.AppsFlyerConversionListener
 import com.appsflyer.AppsFlyerLib
 import com.facebook.applinks.AppLinkData
+import com.orhanobut.hawk.Hawk
 import kotlinx.coroutines.*
 import java.lang.Exception
 import java.net.HttpURLConnection
@@ -39,8 +40,8 @@ class MainActivity : AppCompatActivity() {
         if (prefs.getBoolean("activity_exec", false)) {
 //            toTestGrounds()
 //            finish()
-            val sharPref = getSharedPreferences("SP", MODE_PRIVATE)
-            when (sharPref.getString(CH, "null")) {
+
+            when (Hawk.get<String>(CH)) {
                 "2" -> {
                     skipMe()
                 }
@@ -95,10 +96,7 @@ class MainActivity : AppCompatActivity() {
         return try {
             when (val text = urlConnection.inputStream.bufferedReader().readText()) {
                 "2" -> {
-                    val sharPref = applicationContext.getSharedPreferences("SP", MODE_PRIVATE)
-                    val editor = sharPref.edit()
-                    editor.putString(CH, twoStr)
-                    editor.apply()
+                    Hawk.put(CH, twoStr)
                     Log.d("jsoup status", text)
                     twoStr
                 }
@@ -119,16 +117,15 @@ class MainActivity : AppCompatActivity() {
 
     private fun afNullRecordedOrNotChecker(timeInterval: Long): Job {
 
-        val sharPref = getSharedPreferences("SP", MODE_PRIVATE)
         return CoroutineScope(Dispatchers.IO).launch {
             while (NonCancellable.isActive) {
-                val hawk1: String? = sharPref.getString(C1, null)
+                val hawk1: String? = Hawk.get(C1)
                 if (hawk1 != null) {
                     Log.d("TestInUIHawk", hawk1.toString())
                     toTestGrounds()
                     break
                 } else {
-                    val hawk1: String? = sharPref.getString(C1, null)
+                    val hawk1: String? = Hawk.get(C1)
                     Log.d("TestInUIHawkNulled", hawk1.toString())
                     delay(timeInterval)
                 }
@@ -140,12 +137,9 @@ class MainActivity : AppCompatActivity() {
 
     val conversionDataListener = object : AppsFlyerConversionListener {
         override fun onConversionDataSuccess(data: MutableMap<String, Any>?) {
-            val sharPref = applicationContext.getSharedPreferences("SP", MODE_PRIVATE)
-            val editor = sharPref.edit()
 
             val dataGotten = data?.get("campaign").toString()
-            editor.putString(C1, dataGotten)
-            editor.apply()
+            Hawk.put(C1, dataGotten)
         }
 
         override fun onConversionDataFail(p0: String?) {
@@ -172,24 +166,14 @@ class MainActivity : AppCompatActivity() {
         finish()
     }
     fun deePP(context: Context) {
-        val sharPref = applicationContext.getSharedPreferences("SP", MODE_PRIVATE)
-        val editor = sharPref.edit()
+
         AppLinkData.fetchDeferredAppLinkData(
             context
         ) { appLinkData: AppLinkData? ->
             appLinkData?.let {
                 val params = appLinkData.targetUri.host
-                editor.putString(D1, params.toString())
-                editor.apply()
-            }
-            if (appLinkData == null) {
-
+                Hawk.put(D1,params.toString())
             }
         }
     }
-
-
-
-
-
 }
