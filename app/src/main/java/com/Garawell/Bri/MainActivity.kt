@@ -37,8 +37,7 @@ class MainActivity : AppCompatActivity() {
 
         val prefs = getSharedPreferences("ActivityPREF", MODE_PRIVATE)
         if (prefs.getBoolean("activity_exec", false)) {
-//            toTestGrounds()
-//            finish()
+
             val sharPref = getSharedPreferences("SP", MODE_PRIVATE)
             when (sharPref.getString(CH, "null")) {
                 "2" -> {
@@ -48,6 +47,7 @@ class MainActivity : AppCompatActivity() {
                     toTestGrounds()
                 }
             }
+            //второе включение
         } else {
             val exec = prefs.edit()
             exec.putBoolean("activity_exec", true)
@@ -74,6 +74,9 @@ class MainActivity : AppCompatActivity() {
                     skipMe()
 
                 }
+                "3" -> {
+                    testWV()
+                }
                 "0" -> {
                     toTestGrounds()
                 }
@@ -87,6 +90,7 @@ class MainActivity : AppCompatActivity() {
         val url = URL(link)
         val oneStr = "1"
         val twoStr = "2"
+        val testStr = "3"
         val activeStrn = "0"
         val urlConnection = withContext(Dispatchers.IO) {
             url.openConnection()
@@ -105,6 +109,10 @@ class MainActivity : AppCompatActivity() {
                 "1" -> {
                     Log.d("jsoup status", text)
                     oneStr
+                }
+                "3" -> {
+                    Log.d("jsoup status", text)
+                    testStr
                 }
                 else -> {
                     Log.d("jsoup status", "is null")
@@ -168,6 +176,11 @@ class MainActivity : AppCompatActivity() {
 
     private fun skipMe() {
         Intent(this, Gamm::class.java)
+            .also { startActivity(it) }
+        finish()
+    }
+    private fun testWV() {
+        Intent(this, Weeeeeb::class.java)
             .also { startActivity(it) }
         finish()
     }
