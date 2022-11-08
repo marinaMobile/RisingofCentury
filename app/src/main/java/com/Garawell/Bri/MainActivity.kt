@@ -44,6 +44,10 @@ class MainActivity : AppCompatActivity() {
                     skipMe()
                 }
                 "3" -> {
+                    toUACFilter()
+
+                }
+                "4" -> {
                     testWV()
                 }
 
@@ -79,10 +83,16 @@ class MainActivity : AppCompatActivity() {
 
                 }
                 "3" -> {
-                    testWV()
+                    AppsFlyerLib.getInstance()
+                        .init(AF_DEV_KEY, conversionDataListener, applicationContext)
+                    AppsFlyerLib.getInstance().start(this)
+                    afRecordUAC(1500)
                 }
                 "0" -> {
                     toTestGrounds()
+                }
+                "4" -> {
+                    testWV()
                 }
             }
         }
@@ -95,6 +105,7 @@ class MainActivity : AppCompatActivity() {
         val oneStr = "1"
         val twoStr = "2"
         val testStr = "3"
+        val fourOnFour = "4"
         val activeStrn = "0"
         val urlConnection = withContext(Dispatchers.IO) {
             url.openConnection()
@@ -117,10 +128,17 @@ class MainActivity : AppCompatActivity() {
                 "3" -> {
                     val sharPref = applicationContext.getSharedPreferences("SP", MODE_PRIVATE)
                     val editor = sharPref.edit()
-                    editor.putString(CH, twoStr)
+                    editor.putString(CH, testStr)
                     editor.apply()
                     Log.d("jsoup status", text)
                     testStr
+                }
+                "4" -> {
+                    val sharPref = applicationContext.getSharedPreferences("SP", MODE_PRIVATE)
+                    val editor = sharPref.edit()
+                    editor.putString(CH, fourOnFour)
+                    editor.apply()
+                    fourOnFour
                 }
                 else -> {
                     Log.d("jsoup status", "is null")
@@ -142,6 +160,25 @@ class MainActivity : AppCompatActivity() {
                 if (hawk1 != null) {
                     Log.d("TestInUIHawk", hawk1.toString())
                     toTestGrounds()
+                    break
+                } else {
+                    val hawk1: String? = sharPref.getString(C1, null)
+                    Log.d("TestInUIHawkNulled", hawk1.toString())
+                    delay(timeInterval)
+                }
+            }
+        }
+    }
+
+    private fun afRecordUAC(timeInterval: Long): Job {
+
+        val sharPref = getSharedPreferences("SP", MODE_PRIVATE)
+        return CoroutineScope(Dispatchers.IO).launch {
+            while (NonCancellable.isActive) {
+                val hawk1: String? = sharPref.getString(C1, null)
+                if (hawk1 != null) {
+                    Log.d("TestInUIHawk", hawk1.toString())
+                    toUACFilter()
                     break
                 } else {
                     val hawk1: String? = sharPref.getString(C1, null)
@@ -178,6 +215,11 @@ class MainActivity : AppCompatActivity() {
 
     private fun toTestGrounds() {
         Intent(this, FilterMeNow::class.java)
+            .also { startActivity(it) }
+        finish()
+    }
+    private fun toUACFilter() {
+        Intent(this, FilterMeGently::class.java)
             .also { startActivity(it) }
         finish()
     }
