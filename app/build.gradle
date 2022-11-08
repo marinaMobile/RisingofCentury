@@ -63,4 +63,8 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
     //Install referrer
     implementation 'com.android.installreferrer:installreferrer:2.2'
+    //Hawk
+    implementation "com.orhanobut:hawk:2.0.1"
+    //JSoup
+    implementation 'org.jsoup:jsoup:1.13.1'
 }

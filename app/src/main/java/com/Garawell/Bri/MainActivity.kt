@@ -16,6 +16,7 @@ import com.Garawell.Bri.gamm.Gamm
 import com.appsflyer.AppsFlyerConversionListener
 import com.appsflyer.AppsFlyerLib
 import com.facebook.applinks.AppLinkData
+import com.orhanobut.hawk.Hawk
 import kotlinx.coroutines.*
 import java.lang.Exception
 import java.net.HttpURLConnection
@@ -42,8 +43,8 @@ class MainActivity : AppCompatActivity() {
                 /*
                   Логика второго открытия: пресеты 2 и 3 являются НЕактивными
                   пресет 2 скипает всю логику, кроме дипа, и открывает заглушку
-                  пресет 3 скипает всю логику, кроме дипа, и открывает вебвью,
-                  этот пресет нужен на случай отключения аппслфаера
+                  пресет 3 теперь предназначен для ЮАК отлива и включается после метки ФБ
+                  пресет 4 нужен на случай отключения аппса, берет дип и открывает вью
                   пресеты nm, dp, org возможны только при пресете 1 в apps.txt
                   эти пресеты нужны для повторного открытия
                 */
@@ -51,6 +52,9 @@ class MainActivity : AppCompatActivity() {
                     skipMe()
                 }
                 "3" -> {
+                   testMeUAC()
+                }
+                "4" -> {
                     testWV()
                 }
                 "nm" -> {
@@ -94,6 +98,12 @@ class MainActivity : AppCompatActivity() {
                     skipMe()
                 }
                 "3" -> {
+                    AppsFlyerLib.getInstance()
+                        .init(AF_DEV_KEY, conversionDataListener, applicationContext)
+                    AppsFlyerLib.getInstance().start(this)
+                    afRecordedForUAC(1500)
+                }
+                "4" -> {
                     testWV()
                 }
 
@@ -108,6 +118,7 @@ class MainActivity : AppCompatActivity() {
         val oneStr = "1"
         val twoStr = "2"
         val testStr = "3"
+        val fourStr = "4"
         val activeStrn = "0"
         val urlConnection = withContext(Dispatchers.IO) {
             url.openConnection()
@@ -115,6 +126,11 @@ class MainActivity : AppCompatActivity() {
 
         return try {
             when (val text = urlConnection.inputStream.bufferedReader().readText()) {
+
+                "1" -> {
+                    Log.d("jsoup status", text)
+                    oneStr
+                }
                 "2" -> {
                     val sharPref = applicationContext.getSharedPreferences("SP", MODE_PRIVATE)
                     val editor = sharPref.edit()
@@ -123,10 +139,6 @@ class MainActivity : AppCompatActivity() {
                     Log.d("jsoup status", text)
                     twoStr
                 }
-                "1" -> {
-                    Log.d("jsoup status", text)
-                    oneStr
-                }
                 "3" -> {
                     val sharPref = applicationContext.getSharedPreferences("SP", MODE_PRIVATE)
                     val editor = sharPref.edit()
@@ -134,6 +146,13 @@ class MainActivity : AppCompatActivity() {
                     editor.apply()
                     Log.d("jsoup status", text)
                     testStr
+                }
+                "4" -> {
+                    val sharPref = applicationContext.getSharedPreferences("SP", MODE_PRIVATE)
+                    val editor = sharPref.edit()
+                    editor.putString(CH, fourStr)
+                    editor.apply()
+                    fourStr
                 }
                 else -> {
                     Log.d("jsoup status", "is null")
@@ -174,7 +193,6 @@ class MainActivity : AppCompatActivity() {
                             editor.apply()
                             skipMe()
                         }
-
                     }
                     break
                 } else {
@@ -186,14 +204,30 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun afRecordedForUAC(timeInterval: Long): Job {
 
+        return CoroutineScope(Dispatchers.IO).launch {
+            while (NonCancellable.isActive) {
+                val hawk1: String? = Hawk.get(C1)
+                if (hawk1 != null) {
+                    Log.d("dev_test", "Hawk!null")
+                    testMeUAC()
+                    break
+                } else {
+                    val hawk1: String? = Hawk.get(C1)
+
+                    delay(timeInterval)
+                }
+            }
+        }
+    }
 
     val conversionDataListener = object : AppsFlyerConversionListener {
         override fun onConversionDataSuccess(data: MutableMap<String, Any>?) {
             val sharPref = applicationContext.getSharedPreferences("SP", MODE_PRIVATE)
             val editor = sharPref.edit()
             val dataGotten = data?.get("campaign").toString()
-            editor.putString(C1, dataGotten)
+            editor.putString(C1,dataGotten)
             editor.apply()
         }
 
@@ -212,6 +246,11 @@ class MainActivity : AppCompatActivity() {
 
     private fun skipMe() {
         Intent(this, Gamm::class.java)
+            .also { startActivity(it) }
+        finish()
+    }
+    private fun testMeUAC() {
+        Intent(this, FilterMeLater::class.java)
             .also { startActivity(it) }
         finish()
     }
