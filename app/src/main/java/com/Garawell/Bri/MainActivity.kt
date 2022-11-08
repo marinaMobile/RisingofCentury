@@ -206,16 +206,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun afRecordedForUAC(timeInterval: Long): Job {
-
+        val sharPref = getSharedPreferences("SP", MODE_PRIVATE)
         return CoroutineScope(Dispatchers.IO).launch {
             while (NonCancellable.isActive) {
-                val hawk1: String? = Hawk.get(C13)
+                val hawk1: String? = sharPref.getString(C1, null)
                 if (hawk1 != null) {
                     Log.d("dev_test", "Hawk!null")
                     testMeUAC()
                     break
                 } else {
-                    val hawk1: String? = Hawk.get(C13)
+                    val hawk1: String? = sharPref.getString(C1, null)
                     delay(timeInterval)
                 }
             }
@@ -229,7 +229,6 @@ class MainActivity : AppCompatActivity() {
             val dataGotten = data?.get("campaign").toString()
             editor.putString(C1,dataGotten)
             editor.apply()
-            Hawk.put(C13, dataGotten)
         }
 
         override fun onConversionDataFail(p0: String?) {

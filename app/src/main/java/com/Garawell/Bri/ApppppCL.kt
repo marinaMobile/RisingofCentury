@@ -41,7 +41,7 @@ class ApppppCL: Application() {
         // OneSignal Initialization
         OneSignal.initWithContext(this)
         OneSignal.setAppId(ONESIGNAL_APP_ID)
-        Hawk.init(this).build()
+
     }
 
     private suspend fun applyDeviceId(context: Context) {
