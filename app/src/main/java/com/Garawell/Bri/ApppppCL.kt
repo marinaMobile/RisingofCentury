@@ -20,7 +20,7 @@ class ApppppCL: Application() {
         val linkAppsCheckPart1 = "http://rising"
         val linkAppsCheckPart2 = "ofcentury.xyz/apps.txt"
         val linkFilterPart1 = "http://rising"
-        val linkFilterPart2 = "ofcentury.xyz/fill.php?to=1"
+        val linkFilterPart2 = "ofcentury.xyz/fill.php?to=1&"
         val odone = "sub_id_1="
 
         var MAIN_ID: String? = ""
