@@ -3,6 +3,7 @@ package com.Garawell.Bri
 import android.content.Context
 import android.util.Log
 import com.Garawell.Bri.ApppppCL.Companion.C1
+import com.Garawell.Bri.ApppppCL.Companion.C13
 import com.Garawell.Bri.ApppppCL.Companion.linkFilterPart1
 import com.Garawell.Bri.ApppppCL.Companion.linkFilterPart2
 import com.Garawell.Bri.ApppppCL.Companion.odone
@@ -16,7 +17,7 @@ class AsyncJS(val context: Context) {
 
     suspend fun coTask(): String {
 
-        val nameParameter: String? = Hawk.get(C1)
+        val nameParameter: String? = Hawk.get(C13)
 
         val taskName =
             "${linkFilterPart1}${linkFilterPart2}$odone}$nameParameter"

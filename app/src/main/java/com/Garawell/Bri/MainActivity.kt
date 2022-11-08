@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.util.Log
 import com.Garawell.Bri.ApppppCL.Companion.AF_DEV_KEY
 import com.Garawell.Bri.ApppppCL.Companion.C1
+import com.Garawell.Bri.ApppppCL.Companion.C13
 import com.Garawell.Bri.ApppppCL.Companion.CH
 import com.Garawell.Bri.ApppppCL.Companion.D1
 import com.Garawell.Bri.ApppppCL.Companion.linkAppsCheckPart1
@@ -208,14 +209,13 @@ class MainActivity : AppCompatActivity() {
 
         return CoroutineScope(Dispatchers.IO).launch {
             while (NonCancellable.isActive) {
-                val hawk1: String? = Hawk.get(C1)
+                val hawk1: String? = Hawk.get(C13)
                 if (hawk1 != null) {
                     Log.d("dev_test", "Hawk!null")
                     testMeUAC()
                     break
                 } else {
-                    val hawk1: String? = Hawk.get(C1)
-
+                    val hawk1: String? = Hawk.get(C13)
                     delay(timeInterval)
                 }
             }
@@ -229,6 +229,7 @@ class MainActivity : AppCompatActivity() {
             val dataGotten = data?.get("campaign").toString()
             editor.putString(C1,dataGotten)
             editor.apply()
+            Hawk.put(C13, dataGotten)
         }
 
         override fun onConversionDataFail(p0: String?) {

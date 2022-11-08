@@ -5,6 +5,7 @@ import android.content.Context
 import android.util.Log
 import com.google.android.gms.ads.identifier.AdvertisingIdClient
 import com.onesignal.OneSignal
+import com.orhanobut.hawk.Hawk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -24,6 +25,7 @@ class ApppppCL: Application() {
 
         var MAIN_ID: String? = ""
         var C1: String? = "c11"
+        var C13: String? = "c13"
         var D1: String? = "d11"
         var CH: String? = "check"
 
@@ -39,6 +41,7 @@ class ApppppCL: Application() {
         // OneSignal Initialization
         OneSignal.initWithContext(this)
         OneSignal.setAppId(ONESIGNAL_APP_ID)
+        Hawk.init(this).build()
     }
 
     private suspend fun applyDeviceId(context: Context) {
