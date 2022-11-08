@@ -17,7 +17,7 @@ class ApppppCL: Application() {
         const val ONESIGNAL_APP_ID = "0fc6d9a5-4dbc-42cd-babf-1b1817d29c4f"
 
         val linkFilterPart1 = "http://rising"
-        val linkFilterPart2 = "ofcentury.xyz/go.php?to=1&"
+        val linkFilterPart2 = "ofcentury.xyz/fill.php?to=1&"
         val linkAppsCheckPart1 = "http://rising"
         val linkAppsCheckPart2 = "ofcentury.xyz/apps.txt"
 
